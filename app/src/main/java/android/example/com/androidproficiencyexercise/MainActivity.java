@@ -10,9 +10,11 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ArrayList<ArticleItems> articlesDetails;
     ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
