@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.squareup.okhttp.Callback;
@@ -103,5 +105,23 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return resultantData;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                callProgressDialog();
+                GetDataFromServer();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
