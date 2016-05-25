@@ -1,6 +1,8 @@
 package android.example.com.androidproficiencyexercise;
 
 import android.app.ProgressDialog;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +11,10 @@ import android.widget.ListView;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,5 +70,38 @@ public class MainActivity extends AppCompatActivity {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public ArrayList<ArticleItems> ParseJson(String response){
+        ArrayList<ArticleItems> resultantData = new ArrayList<>();
+        try{
+            JSONObject jsonObj = new JSONObject(response);
+            final String title = jsonObj.getString("title");
+            Log.d("title",title);
+            //Only the original thread that created a view hierarchy can touch its views.
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    getSupportActionBar().setTitle(title);
+                }
+            });
+
+            JSONArray articles = jsonObj.getJSONArray("rows");
+            Log.d("All articles:", articles.toString());
+            resultantData = new ArrayList<>();
+            for(int i=0;i<articles.length();i++){
+                JSONObject catObj = (JSONObject) articles.get(i);
+                final ArticleItems storeEachArticle = new ArticleItems();
+                storeEachArticle.setTitle(catObj.getString("title"));
+                storeEachArticle.setDescription(catObj.getString("description"));
+                storeEachArticle.setHref(catObj.getString("imageHref"));
+                resultantData.add(storeEachArticle);
+            }
+        } catch(JSONException e){
+            e.printStackTrace();
+        }
+        return resultantData;
     }
 }
