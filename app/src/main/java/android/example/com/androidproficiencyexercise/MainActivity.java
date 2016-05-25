@@ -1,5 +1,6 @@
 package android.example.com.androidproficiencyexercise;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,13 +17,21 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<ArticleItems> articlesDetails;
     ListView listView;
+    ProgressDialog progress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         listView = (ListView) findViewById(R.id.list);
+        callProgressDialog();
         GetDataFromServer();
+    }
+
+    private void callProgressDialog(){
+        progress = new ProgressDialog(this);
+        progress.setMessage("Loading.....");
+        progress.setCanceledOnTouchOutside(false);
+        progress.show();
     }
 
     private void GetDataFromServer() {
