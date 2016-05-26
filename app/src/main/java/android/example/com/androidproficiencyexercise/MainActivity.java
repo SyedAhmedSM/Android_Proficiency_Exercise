@@ -30,8 +30,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //getting thr reference of listview
         listView = (ListView) findViewById(R.id.list);
+        //starting the progress dialog
         callProgressDialog();
+        //making a network call and getting the json
         GetDataFromServer();
     }
 
@@ -46,7 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             getJsonData getDataFromServer = new getJsonData();
+            //url to get the json
             String url = "https://dl.dropboxusercontent.com/u/746330/facts.json";
+            //making the network call
             getDataFromServer.getArticles(url, new Callback() {
                         @Override
                         public void onFailure(Request request, IOException e) {
@@ -74,22 +80,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //parsing the json
     public ArrayList<ArticleItems> ParseJson(String response){
         ArrayList<ArticleItems> resultantData = new ArrayList<>();
         try{
             JSONObject jsonObj = new JSONObject(response);
             final String title = jsonObj.getString("title");
             Log.d("title",title);
-            //Only the original thread that created a view hierarchy can touch its views.
+            /*Only the original thread that created a view hierarchy can touch its views.
+                soo update the main thread using the handler
+             */
             new Handler(Looper.getMainLooper()).post(new Runnable() {
 
                 @Override
                 public void run() {
+                    //set the title of actionbar
                     getSupportActionBar().setTitle(title);
                 }
             });
 
+            //getting the array of json rows as jsonarray
             JSONArray articles = jsonObj.getJSONArray("rows");
             Log.d("All articles:", articles.toString());
             resultantData = new ArrayList<>();
